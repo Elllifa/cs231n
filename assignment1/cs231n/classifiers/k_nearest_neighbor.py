@@ -72,6 +72,7 @@ class KNearestNeighbor(object):
         # not use a loop over dimension.                                    #
         #####################################################################
         pass
+        dists[i,j] = np.sqrt(np.sum(np.square((self.X_train[j] - X[i]))))
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -94,6 +95,7 @@ class KNearestNeighbor(object):
       # points, and store the result in dists[i, :].                        #
       #######################################################################
       pass
+      dists[i,:] = np.sqrt(np.sum(np.square(self.X_train - X[i, :]), axis = 1))
       #######################################################################
       #                         END OF YOUR CODE                            #
       #######################################################################
@@ -122,6 +124,8 @@ class KNearestNeighbor(object):
     #       and two broadcast sums.                                         #
     #########################################################################
     pass
+    dists = np.sqrt(np.sum(self.X_train**2, axis =1) + np.reshape(np.sum(X**2, axis=1), [num_test, 1])
+    - 2*np.dot(X, self.X_train.T))
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
