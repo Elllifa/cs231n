@@ -11,8 +11,6 @@ y_train = np.array([0, 1, 2, 1])
 num_test = X_test.shape[0]
 num_train = X_train.shape[0]
 dists = np.zeros((num_test, num_train))
-#k = np.sqrt(np.sum(np.square(X_train - X_test[1,:]), axis =1))
-#print(k)
 
 
 '''
@@ -31,13 +29,12 @@ print(dists)
 dists = np.sqrt(np.sum(X_train**2, axis =1) + np.reshape(np.sum(X_test**2, axis=1), [num_test, 1])
 - 2*np.dot(X_test, X_train.T))
 
-t=[]
+
 y_pred = np.zeros(num_test)
-z=[]
+
 for i in range(num_test):
     closest_y = []
     ind = np.argsort(dists[i])
     closest_y = y_train[ind][0:3]
-    z.append(closest_y)
-    t.append(np.bincount(closest_y))
-    y_pred[i] = np.bincount(closest_y).argmax()
+    k = np.bincount(closest_y)
+    y_pred[i] = k.argmax()
