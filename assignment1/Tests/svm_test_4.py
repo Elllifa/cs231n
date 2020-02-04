@@ -31,4 +31,4 @@ for i in range(num_train):
             dW[:, y[i]] = dW[:, y[i]]-X[i]
 
 loss /= num_train
-dW /= num_train
+#dW /= num_train

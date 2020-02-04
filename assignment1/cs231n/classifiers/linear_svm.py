@@ -85,11 +85,16 @@ def svm_loss_vectorized(W, X, y, reg):
     # result in loss.             
     num_train = X.shape[0]
     scores = X.dot(W)
+    correct_class_scores =  np.choose(y, scores.T).reshape(scores.shape[0],1)
+    margin = scores - correct_class_scores+1   
+    
+    margin = np.maximum(0, margin)
+        # return zeros to correct classes in margin matrix
+    margin[np.arange(num_train), y] = 0 
+
     correct_class_scores =  np.choose(y, scores.T)
-    margin = scores - correct_class_scores.reshape(scores.shape[0], 1)+ 1   
-    # subtract y.shape[0] because later we added 1 to all axes, and now we
-    # have to return all margins to zeros for the correct classes:
-    loss+= np.sum(margin[margin>0]) - y.shape[0] 
+     
+    loss= np.sum(margin[margin>0]) 
     
     loss /= num_train
     loss += reg * np.sum(W * W)                                                 #
@@ -112,9 +117,16 @@ def svm_loss_vectorized(W, X, y, reg):
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     pass
-    # return zeros to correct classes in margin matrix
-    margin[np.arange(num_train), y] = 0 
+    # count how much positions need to be modified
     margin[margin>0] = 1
+    samples_to_subtract = np.sum(margin, axis = 1)
+    # for every margin>0 we must subtract one sample of x from the correct class:
+    margin[range(num_train), y]-=samples_to_subtract 
+    # now we have matrix that shows the count of rows of X that we must add
+    # to every column of dW
+    dW =  np.dot(X.T, margin)/num_train
+    
+    dW += reg * 2 * W
     
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
