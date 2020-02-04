@@ -19,3 +19,5 @@ scores = X.dot(W)
 correct_class_scores =  np.choose(y, scores.T)
 margin = scores - correct_class_scores.reshape(scores.shape[0], 1) + 1
 loss+= np.sum(margin[margin>0]) - y.shape[0]
+
+margin[np.arange(num_train), y] =0

@@ -86,8 +86,11 @@ def svm_loss_vectorized(W, X, y, reg):
     num_train = X.shape[0]
     scores = X.dot(W)
     correct_class_scores =  np.choose(y, scores.T)
-    margin = scores - correct_class_scores.reshape(scores.shape[0], 1) + 1      
-    loss+= np.sum(margin[margin>0]) - y.shape[0]    
+    margin = scores - correct_class_scores.reshape(scores.shape[0], 1)+ 1   
+    # subtract y.shape[0] because later we added 1 to all axes, and now we
+    # have to return all margins to zeros for the correct classes:
+    loss+= np.sum(margin[margin>0]) - y.shape[0] 
+    
     loss /= num_train
     loss += reg * np.sum(W * W)                                                 #
     #############################################################################
@@ -109,7 +112,10 @@ def svm_loss_vectorized(W, X, y, reg):
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     pass
-
+    # return zeros to correct classes in margin matrix
+    margin[np.arange(num_train), y] = 0 
+    margin[margin>0] = 1
+    
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     return loss, dW
