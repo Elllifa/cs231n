@@ -37,13 +37,13 @@ def softmax_loss_naive(W, X, y, reg):
     num_train = X.shape[0]
     scores = np.dot(X,W)
     for i in range(scores.shape[0]):
+        scores[i] -= np.max(scores[i])          
+        softmax = np.exp(scores[i][y[i]]) / np.sum(np.exp(scores[i]))
+        loss += -np.log(softmax)
+        
         for j in range(scores.shape[1]):
-            scores[i][j] -= np.max(scores[i])          
-            loss += -np.log(np.exp(scores[i][y[i]])/np.sum(np.exp(scores[i]))
-            
-            dW[:,j] = dW[:,j]+np.exp(scores[i][y[i]])/np.sum(np.exp(scores[i]))
-            dW[:, y[i]] = dW[:, y[i]]+np.exp(scores[i][y[i]])/np.sum(np.exp(scores[i]))-1
-            
+            dW[:,j] += 
+            dW[:,y[i]] -= 
     loss /= num_train
     dW /= num_train
     loss += reg * np.sum(W * W)   
